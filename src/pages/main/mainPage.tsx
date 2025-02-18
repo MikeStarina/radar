@@ -24,7 +24,6 @@ const MainPage = () => {
 
     // pagination handler
     const paginationChangeHandler = (page: number) => {
-        setVirtualLimit(INITIAL_PRODUCT_LIM);
         nav(`/?page=${page}`)
         setPagesData({
             ...pagesData,
@@ -39,6 +38,7 @@ const MainPage = () => {
     useEffect(() => {
         const body = document.querySelector('body');
         body?.scrollTo(0, 0)
+        setVirtualLimit(INITIAL_PRODUCT_LIM)
         const fetchData = async () => {
             if (isAuthenticated && token) {
                 const page = params.get('page')
@@ -70,7 +70,7 @@ const MainPage = () => {
         const observer = new IntersectionObserver((entries) => {
             const [entry] = entries;
             if (products && entry.isIntersecting && virtualLimit < products.length) {
-                setVirtualLimit(prevLimit => prevLimit + 5);
+                setVirtualLimit(virtualLimit + 5);
             }
         }, observerOptions);
     
@@ -84,7 +84,7 @@ const MainPage = () => {
                 observer.unobserve(currentRef);
             }
         };
-    }, [observerRef, virtualLimit, products]);
+    }, [observerRef, virtualLimit, products, observerOptions]);
 
     //--------
 
@@ -93,7 +93,7 @@ const MainPage = () => {
             {products && <section className={styles.page}>
                 <div className={styles.container}>filters</div>
                 <div className={styles.container}>
-                    {products.slice(0, virtualLimit).map((i) => <ProductsItem item={i} key={i.id} />)}
+                    {products.map((i, index) => index < virtualLimit && <ProductsItem item={i} key={i.id} />)}
                     <div
                         style={{ width: '100%', height: '10px' }}
                         ref={observerRef}
