@@ -24,8 +24,15 @@ const MainPage = () => {
 
     // pagination handler
     const paginationChangeHandler = (page: number) => {
-        nav(`/?page=${page}`)
         setVirtualLimit(INITIAL_PRODUCT_LIM);
+        nav(`/?page=${page}`)
+        setPagesData({
+            ...pagesData,
+            current_page: page,
+            pages: pagesData?.pages ?? 0,
+            limit: pagesData?.limit ?? 0  
+        });
+       
     }
 
     // init data && auth checker
