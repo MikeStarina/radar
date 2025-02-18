@@ -56,6 +56,24 @@ export const signUpFunc = async (data: { username: string, password: string, ful
         return { isSuccess: false, message: 'An error occurred' };
     }
 }
+export const logout = async (token: string): Promise<{ isSuccess: boolean, message?: string }> => {
+    try {
+        const res = await fetch(`${API_URL}/logout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${token}`
+            },
+        }).then(checkResponse);
+
+        return res;
+    } catch (e) {
+        // --
+        // console.error(e);
+        // throw e
+        return { isSuccess: false, message: 'An error occurred' };
+    }
+}
 
 export const getProducts = async ({ token, page = '1' }: { token: string, page?: string | null }): Promise<ProductResponse> => {
     let url = `${API_URL}/get_products/?`;
